@@ -1,19 +1,122 @@
+def get_movie_recommendations(genre):
+    """
+    Returns a list of recommended movies based on user's preferred genre.
+    :param genre: The movie genre chosen by the user.
+    :return: A list of recommended movies for the genre
+    """
+    movies = {
+        "action": ["Mad Mac: Fury Road", "John Wick", "Monkey Man", "Gladiator"],
+        "comedy": ["Step Brothers", "Superbad", "The Hangover", "Neighbors"],
+        "horror": ["The Conjuring", "Get Out", "A Quiet Place", "Birdbox"],
+        "sci-fi": ["Inception", "The Matrix", "Interstellar"]
+    }
+    return movies.get(genre.lower(), [])
+
+def main():
+    print("Welcome to the Movie Recommendation System!")
+    genre = input("Enter your favorite movie genre: ").strip()
+
+    recommendations = get_movie_recommendations(genre)
+
+    if recommendations:
+        print(f"Here are some {genre.capitalize()} movie recommendations: {', '.join(recommendations)}")
+    else:
+        print("Sorry, we don't have recommendations for that genre.")
+
+if __name__ == "__main__":
+    main()
+
+
+import random
+
+def get_random_movie(genre):
+    """
+    Returns a list of recommended movies based on user's preferred genre.
+    :param genre: The movie genre chosen by the user.
+    :return: A list of recommended movies for the genre
+    """
+    movies = {
+        "action": ["Mad Mac: Fury Road", "John Wick", "Monkey Man", "Gladiator"],
+        "comedy": ["Step Brothers", "Superbad", "The Hangover", "Neighbors"],
+        "horror": ["The Conjuring", "Get Out", "A Quiet Place", "Birdbox"],
+        "sci-fi": ["Inception", "The Matrix", "Interstellar"]
+    }
+    if genre.lower() in movies:
+        return random.choice(movies[genre.lower()])
+    else:
+        return "Sorry we don't have recommendations for that genre."
+
+def main():
+    print("Welcome to the Movie Recommendation System!")
+    genre = input("Enter your favorite movie genre: ").strip()
+
+    movie = get_random_movie(genre)
+    print(f"Here's a movie recommendation for you: {movie}")
+
+if __name__ == "__main__":
+    main()
+
+    import requests
+    from bs4 import BeautifulSoup
+    import random
+
+
+    def scrape_letterboxd_movies(genre):
+        """
+        Scrapes Letterboxd for movie recommendations based on genre and returns a random movie.
+
+        Parameters:
+        genre (str): The movie genre chosen by the user.
+
+        Returns:
+        str: A randomly selected movie title or an error message if scraping fails.
+        """
+        url = f"https://letterboxd.com/films/genre/{genre.lower()}/"
+        headers = {"User-Agent": "Mozilla/5.0"}  # Mimic a real browser request
+
+        response = requests.get(url, headers=headers)
+
+        if response.status_code != 200:
+            return "Failed to retrieve data. Please check the genre or your internet connection."
+
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Extract movie titles from the page
+        movies = [tag["alt"] for tag in soup.find_all("img", class_="film-poster")]
+
+        if not movies:
+            return "No movies found for this genre. Try a different one."
+
+        return random.choice(movies)  # Return a random movie
+
+
+    def main():
+        print("Welcome to the Movie Recommendation System!")
+        genre = input("Enter your favorite movie genre (e.g., action, comedy, horror, sci-fi): ").strip()
+
+        print("\nFetching a movie recommendation from Letterboxd...")
+        movie = scrape_letterboxd_movies(genre)
+
+        print(f"Here's a random {genre.capitalize()} movie recommendation for you: {movie}")
+
+
+    if __name__ == "__main__":
+        main()
+
+
+
+
 import pandas as pd
 
-# Load the CSV file
 file_path = '/Users/carolinabarandica/Downloads/IMDB Top 250 Movies.csv'
 df = pd.read_csv(file_path)
 
-# Print actual column names for debugging
 print("Actual Column Names in CSV:", df.columns.tolist())
 
-# Normalize column names
 df.columns = df.columns.str.strip().str.lower()
 
-# Rename columns to match expected names
 df.rename(columns={"name": "title", "directors": "director"}, inplace=True)
 
-# Verify required columns
 required_columns = {'title', 'director', 'genre'}
 missing_columns = required_columns - set(df.columns)
 
@@ -24,7 +127,6 @@ if missing_columns:
 
 print("\nColumns have been successfully mapped!")
 
-# Dictionary to store user ratings
 user_ratings = {}
 
 
@@ -134,3 +236,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
