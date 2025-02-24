@@ -38,7 +38,9 @@ def get_movie_info(movie_name):
         movie_info = movie.iloc[0]  # Get the first match
         print(f"\nMovie: {movie_info['title']}")
         print(f"Director: {movie_info['director']}")
-        print(f"Genres: {movie_info['genre']}\n")
+        print("Genres:")
+        for genre in movie_info['genre'].split(','):
+            print(f"- {genre.strip()}")
     else:
         print("Sorry, we don't have information on that movie.\n")
 
@@ -100,9 +102,12 @@ def get_movie_recommendations(genre):
     recommended_movies = df[df['genre'].str.contains(genre, case=False, na=False)]
 
     if not recommended_movies.empty:
-        return recommended_movies['title'].sample(n=min(5, len(recommended_movies))).tolist()
+        recommendations = recommended_movies['title'].sample(n=min(5, len(recommended_movies))).tolist()
+        print(f"\nHere are some {genre.capitalize()} movie recommendations:")
+        for movie in recommendations:
+            print(f"- {movie}")
     else:
-        return []
+        print("Sorry, we don't have recommendations for that genre.")
 
 
 def main():
@@ -143,11 +148,7 @@ def main():
 
         elif choice == "6":
             genre = input("\nEnter a genre for recommendations (e.g., Action, Comedy, Horror, Sci-Fi): ").strip()
-            recommendations = get_movie_recommendations(genre)
-            if recommendations:
-                print(f"\nHere are some {genre.capitalize()} movie recommendations: {', '.join(recommendations)}")
-            else:
-                print("Sorry, we don't have recommendations for that genre.")
+            get_movie_recommendations(genre)
 
         elif choice == "7":
             print("\nGoodbye!")
