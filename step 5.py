@@ -1,20 +1,15 @@
 import pandas as pd
 import random
 
-# Load the CSV file
 file_path = '/Users/carolinabarandica/Downloads/IMDB Top 250 Movies.csv'
 df = pd.read_csv(file_path)
 
-# Print actual column names for debugging
 print("Actual Column Names in CSV:", df.columns.tolist())
 
-# Normalize column names
 df.columns = df.columns.str.strip().str.lower()
 
-# Rename columns to match expected names
 df.rename(columns={"name": "title", "directors": "director"}, inplace=True)
 
-# Verify required columns
 required_columns = {'title', 'director', 'genre'}
 missing_columns = required_columns - set(df.columns)
 
@@ -25,7 +20,6 @@ if missing_columns:
 
 print("\nColumns have been successfully mapped!")
 
-# Dictionary to store user ratings
 user_ratings = {}
 
 
@@ -35,7 +29,7 @@ def get_movie_info(movie_name):
     movie = df[df['title'].str.lower() == movie_name]
 
     if not movie.empty:
-        movie_info = movie.iloc[0]  # Get the first match
+        movie_info = movie.iloc[0]
         print(f"\nMovie: {movie_info['title']}")
         print(f"Director: {movie_info['director']}")
         print("Genres:")
